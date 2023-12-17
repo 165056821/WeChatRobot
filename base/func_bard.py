@@ -32,5 +32,5 @@ if __name__ == "__main__":
         exit(0)
 
     bard_assistant = BardAssistant(config)
-    rsp = BardAssistant.get_answer("who are you?")
+    rsp = BardAssistant.get_answer("who are you?","who are you?")
     print(rsp)

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import datetime
 import logging
 import re
 import time
@@ -150,7 +150,11 @@ class Robot(Job):
 
         # 非群聊信息，按消息类型进行处理
         if msg.type == 37:  # 好友请求
-            self.autoAcceptFriendRequest(msg)
+            # 如果msg中不包含当前日期字符则退出
+            formatted_day = f"#{datetime.datetime.now().strftime('%d')}#"
+            apply_word = ET.fromstring(msg.content).attrib["content"]
+            if formatted_day in apply_word:
+                self.autoAcceptFriendRequest(msg)
 
         elif msg.type == 10000:  # 系统信息
             self.sayHiToNewFriend(msg)

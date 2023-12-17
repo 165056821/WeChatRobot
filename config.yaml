@@ -1,0 +1,135 @@
+logging:
+  version: 1
+  disable_existing_loggers: False
+
+  formatters:
+    simple:
+      format: "%(asctime)s %(message)s"
+      datefmt: "%Y-%m-%d %H:%M:%S"
+    error:
+      format: "%(asctime)s %(name)s %(levelname)s %(filename)s::%(funcName)s[%(lineno)d]:%(message)s"
+
+  handlers:
+    console:
+      class: logging.StreamHandler
+      level: INFO
+      formatter: simple
+      stream: ext://sys.stdout
+
+    info_file_handler:
+      class: logging.handlers.RotatingFileHandler
+      level: INFO
+      formatter: simple
+      filename: wx_info.log
+      maxBytes: 10485760  # 10MB
+      backupCount: 20
+      encoding: utf8
+
+    error_file_handler:
+      class: logging.handlers.RotatingFileHandler
+      level: ERROR
+      formatter: error
+      filename: wx_error.log
+      maxBytes: 10485760  # 10MB
+      backupCount: 20
+      encoding: utf8
+
+  root:
+    level: INFO
+    handlers: [console, info_file_handler, error_file_handler]
+
+
+
+groups:
+  enable: [ 39261378509@chatroom,
+            19372637189@chatroom,
+            38800851173@chatroom,
+            5615633546@chatroom]  # 允许响应的群 roomId，大概长这样：2xxxxxxxxx3@chatroom
+#39261378509@chatroom 测试群
+#19372637189@chatroom 信息化工作专班
+#38800851173@chatroom 李旭东科长工作群
+#5615633546@chatroom 家人群
+
+news:
+  receivers: []  # 定时新闻接收人（roomid 或者 wxid）
+
+report_reminder:
+  receivers: []  # 定时日报周报月报提醒（roomid 或者 wxid）
+
+chatgpt: # -----chatgpt配置这行不填-----
+  key: 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 # 填写你 ChatGPT 的 key
+  api: https://api.openai.com/v1  # 如果你不知道这是干嘛的，就不要改
+  proxy: 127.0.0.1:50937 # 如果你在国内，你可能需要魔法，大概长这样：http://域名或者IP地址:端口号
+  prompt: 你是医疗助手，只能回答医疗问题。  # 根据需要对角色进行设定
+
+chatglm:  # -----chatglm配置这行不填-----
+  key: sk-012345678901234567890123456789012345678901234567 # 这个应该不用动
+  api: http://localhost:8000/v1  # 根据自己的chatglm地址修改
+  proxy:  # 如果你在国内，你可能需要魔法，大概长这样：http://域名或者IP地址:端口号
+  prompt: 你是智能聊天机器人，你叫小薇  # 根据需要对角色进行设定 
+  file_path: F:/Pictures/temp  #设定生成图片和代码使用的文件夹路径
+
+tigerbot:  # -----tigerbot配置这行不填-----
+  key:  # key
+  model:  # tigerbot-7b-sft
+
+xinghuo_web: # -----讯飞星火web模式api配置这行不填 抓取方式详见文档：https://www.bilibili.com/read/cv27066577-----
+  cookie: di_c_mti=f6ca4c18-f30c-67c5-a164-eb16d8ddc33f; account_id=2557789104; Hm_lvt_fe740601c79b0c00b6d5458d146aa5ef=1688352810; gr_user_id=8ac537fd-1810-4513-8b37-f15372b6bcc1; Hm_lvt_83a57cc9e205b0add91afc6c4f0babcc=1688354187; _ga=GA1.2.719791321.1688352809; _ga_KJSXK8SL0Y=GS1.1.1688352808.1.1.1688354544.30.0.0; d_d_app_ver=1.4.0; d_d_ci=3615714e-77c7-61d6-82cf-4645d9a4e9f1; ssoSessionId=0ea4c1a8-dd27-496c-a56a-4d9c888a63b6; daas_st={%22sdk_ver%22:%221.3.9%22%2C%22status%22:%220%22}; appid=150b4dfebe; gt_local_id=QaM2BAdDUrCm/eXWCa6ZoKVkhz7M3se5lXWFEQFW+lzd2a1UuNMIwA== # cookie
+  fd: 321921 # fd
+  GtToken: RzAwAGN7+8rt7U2fYx7UGM3CHlQvFfeprP1anYex31vxEkTixxHYib52uhYRILHK5QenRV8O5+uujYkEqv0qO0Sav/a8sDEMmNNwa1H+IbHIx2QOLyLz3IBhw7+m1ZCheS94ixttLAD3C/XxJ+bGqL2iA++eYfa600RF8uwuMNYeB1lub1dQ2R3BFx7xK0m/y4xyr0jQz79ObMuoGK8XU+/zZUq2NPJhfcWZ5GsTH0AultDiP+dI2ODy3ZGGkzHbTnX1dKXUA/xKHV6z0R1lw42blV3YNyrmFUruD8n4xbYC/LTVSbATlrkRRiyD7VHYn7W0WsFYQ+ei9Qtz54F7xFo6rHT6dM1No6zmCd1Ovm3kPgPN4I0g0PnojYsmVXXB7I0Xl6QOGBFDkNDDPu2iqimzKmnqnflHWtibwaej2YsbeUzEgVlM3nVg5tmu+P6U7fbb8TiMWk+9f85+Z2YZaUlxy/SkTBMdZeT7J10pSoUKj0S2jeo+2W4p0XghTSCrI6U40bzxDuxdNCQlTIbHczFt5uC6QyJpCNGG6XV5M7J95uyI3qNIbCHCSVt7ivOl8v45xiE8vfMzw93bXZyyAO8GUIIT8JIDnrA+XGogWnwemJPo+Wq1v/8AQ9muPF+sjs2ukgA0wlMfo2rHmb1DtT88Y7KvYHJ/4HziQnBoRlDhr1jkIocvYhsYauMzJ4XKKJrw7VibtUe5oITq81U6AO2Of2DOqOTlo/UHY+T2NYMWe3ZkVnT5J8ycwn2hdmBrM+RVLVZvMFMxGJmi2RQjLQispFWU1bES5QJ5BtLzoteCjWp/k47wnQ57PHvj7/BBa+7SLVYM5YKEzshAUokJ6Putkkgq2MRAu60aMDmtZWozmK6BlYYOcKHABFw0T0hPj5ow4AeuMvTc68bwzNS+9yGnEF5NJwi85A8Cal+tsCT9Ol71VbEpk7tniRD5rq5p8+om/NKTAgUtmOhMPgZyd6gkUS/LjUBVLTf0NijnTZjhyR1aS+QbQvrdZM0Er6mt+cbFDUwSdXklcuxrI8dq39mzsx1vCLsw3Ur0p8ssT5eehfA9B9mDt8QcMaJHWEi7ehMSBWUSshRqP9Ee8WIGfW6mhSCpxa25lF35G80a2Llu18IFtdL1BdvVoC1t9HP1AciHeN31mDla8LJaQUDyDHLXvREGdvw4jwQlffa6q6sIxt+WMV84uYdOVVwIcEJwDPF914aYO6X1xbrOuGp7SZIXvXzYiexwe0Xb8PqFhMNtc3TYdNVWhlDCGR84LTzbhblMMRkZCAb74AISobTAyZ6mxjXhI+Nlkn4G3jLztOm/NC4LdCYemewEpAtIxb4hiocvfrxv1su7JbiGAZSsqV3TsHXlXBnIDdghOn1z6gAt7PbmjTckAYAyC5Q04f0eqS6lSI9ii7BYPXhT+bIKXcUArmkxi3bTlQqRUXwaXxg1bAFDJ0FsyKzeMA3NoPLy5KKLFCqVMip3ledzClsGJmv6As6CLR6e7fU0d+/LJRadAE2mDB9xvthns5wBO/Ggl/GrTTjgB85D3/rZkZdZzeb0uMojJ+Sv1maG5jlqhm0e/V/9fBbdrQlQG/JgN5z0m0BEa+RImxDsJLSePZVkG+TqkyeSWOpZgUpO0BiVhC4YGqmdC2zgub0dtz/X4GGb5UCNoN6k1kkS46ZAOZY6dvcAtr5z4FeB8sRBuBIFmQI/aF/6uin60BYn2HBmoiyrFNhLyjBDqcFYcQkTDhWjtGZoL+cQySrBjp9fO2uC85T3ImOp3Ee2pr2HOSozaGeH9dKxAcU72phQ217FTmJJ/zJrFFPzB8LTzuEWGDLSr3FR18FB6hy/IzbPNBbOExa0N6ekv06KbH4t4mtirSPPNSqwOcDy7KWSfayXOJo/AWI/c7euyl6ilie49PJ9MHhu/2jPYNzapMco1cmnK2X+FBg97l1i # GtToken
+  prompt: 你是智能聊天机器人，你叫wcferry。请用这个角色回答我的问题  # 根据需要对角色进行设定
+
+bard: # -----bard配置这行不填-----
+  api_key: AIzaSyBZGNyBgy-KfheyzZEQsjoSd_H4JZSHVwE # api-key 创建地址：https://ai.google.dev/pricing?hl=en，创建后复制过来即可
+  model_name: gemini-pro # 新模型上线后可以选择模型
+
+
+#
+#logging:
+#  version: 1
+#  disable_existing_loggers: False
+#
+#  formatters:
+#    simple:
+#      format: "%(asctime)s %(message)s"
+#      datefmt: "%Y-%m-%d %H:%M:%S"
+#    error:
+#      format: "%(asctime)s %(name)s %(levelname)s %(filename)s::%(funcName)s[%(lineno)d]:%(message)s"
+#
+#  handlers:
+#    console:
+#      class: logging.StreamHandler
+#      level: INFO
+#      formatter: simple
+#      stream: ext://sys.stdout
+#
+#    info_file_handler:
+#      class: logging.handlers.RotatingFileHandler
+#      level: INFO
+#      formatter: simple
+#      filename: wx_info.log
+#      maxBytes: 10485760  # 10MB
+#      backupCount: 20
+#      encoding: utf8
+#
+#    error_file_handler:
+#      class: logging.handlers.RotatingFileHandler
+#      level: ERROR
+#      formatter: error
+#      filename: wx_error.log
+#      maxBytes: 10485760  # 10MB
+#      backupCount: 20
+#      encoding: utf8
+#
+#  root:
+#    level: INFO
+#    handlers: [ console, info_file_handler, error_file_handler ]
+#
+
+#
+#news:
+#  receivers: [ ]  # 定时新闻接收人（roomid 或者 wxid）
+#
+#report_reminder:
+#  receivers: [ ]  # 定时日报周报月报提醒（roomid 或者 wxid）
+#
