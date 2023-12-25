@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Chat in Vue</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div id="app" class="container mt-5">
+    <div class="row">
+        <div class="col-12 col-md-6 mx-auto">
+            <p>连接状态：<span>{{ status }}</span></p>
+            <div class="border bg-light p-3" style="height: 150px; overflow-y: scroll;">{{ message }}</div>
+
+            <div class="row mt-3">
+                <div class="col-8">
+                    <input type="text" class="form-control" v-model="inputMessage" placeholder="输入消息...">
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-primary w-100" @click="sendMessage">发送11</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Vue JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.7.15/vue.min.js"></script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            status: '未连接',
+            message: '',
+            inputMessage: '',
+            socket: null
+        },
+        created() {
+              console.log("begin created")
+            this.initializeWebSocket();
+        },
+        methods: {
+            initializeWebSocket() {
+                this.socket = new WebSocket("ws://192.168.10.21:8000/chat");
+                this.socket.addEventListener("open", () => {
+                    this.status = "已连接";
+                    console.log("已连接")
+                });
+
+                this.socket.addEventListener("error", () => {
+                    this.status = "连接失败";
+                });
+
+                this.socket.addEventListener("close", () => {
+                    this.status = "连接关闭";
+                });
+
+                this.socket.addEventListener("message", (event) => {
+                    console.log(event.data)
+                    this.message += `${event.data}`;
+                });
+            },
+            sendMessage() {
+                if (this.socket.readyState === WebSocket.OPEN) {
+                    this.socket.send(this.inputMessage);
+                    this.inputMessage = "";
+                } else {
+                    alert("无法发送消息，WebSocket 未连接。");
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <title>WebSocket Chat</title>
+    <!-- Bootstrap CSS (BootCDN) -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #message {
+            height: 300px;
+            overflow-y: scroll;
+            overflow-x: scroll;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12 col-md-6 mx-auto">
+            <div class="row">
+                <div class="col-8">
+                    <input id="inputMessage" type="text" class="form-control" placeholder="输入消息...">
+                </div>
+                <div class="col-4">
+                    <button id="sendMessage" class="btn btn-primary w-100">发送</button>
+                </div>
+            </div>
+            <div id="message" class="border bg-light p-3"></div>
+            <p>连接状态：<span id="status">未连接</span></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    const statusSpan = document.getElementById("status");
+    const messageSpan = document.getElementById("message");
+    const inputField = document.getElementById("inputMessage");
+    const sendButton = document.getElementById("sendMessage");
+
+    function initializeWebSocket() {
+        const socket = new WebSocket("ws://192.168.10.21:8000/chat");
+
+        socket.addEventListener("open", () => {
+            statusSpan.innerText = "已连接";
+        });
+
+        socket.addEventListener("error", () => {
+            statusSpan.innerText = "连接失败";
+        });
+
+        socket.addEventListener("close", () => {
+            statusSpan.innerText = "连接关闭";
+        });
+
+        socket.addEventListener("message", (event) => {
+            messageSpan.innerText += `${event.data}`;
+        });
+
+        sendButton.addEventListener("click", () => {
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(inputField.value);
+                inputField.value = "";
+            } else {
+                alert("无法发送消息，WebSocket 未连接。");
+            }
+        });
+    }
+
+    initializeWebSocket();
+</script>
+<!-- Bootstrap JS, Popper.js, and jQuery (BootCDN) -->
+<!--<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>-->
+<!--<script src="https://cdn.bootcdn.net/ajax/libs/popper.js/2.3.3/cjs/popper.min.js"></script>-->
+<!--<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
+</body>
+</html>

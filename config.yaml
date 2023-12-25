@@ -57,7 +57,7 @@ report_reminder:
   receivers: []  # 定时日报周报月报提醒（roomid 或者 wxid）
 
 chatgpt: # -----chatgpt配置这行不填-----
-  key: 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 # 填写你 ChatGPT 的 key
+  key: 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 # 填写你 ChatGPT 的 key
   api: https://api.openai.com/v1  # 如果你不知道这是干嘛的，就不要改
   proxy: 127.0.0.1:50937 # 如果你在国内，你可能需要魔法，大概长这样：http://域名或者IP地址:端口号
   prompt: 你是医疗助手，只能回答医疗问题。  # 根据需要对角色进行设定

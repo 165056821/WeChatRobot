@@ -1,0 +1,4 @@
+[tool.aerich]
+tortoise_orm = "config.dbsettings.TORTOISE_ORM_POSTGRESQL_DEV"
+location = "./migrations"
+src_folder = "./."

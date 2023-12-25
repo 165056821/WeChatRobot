@@ -109,7 +109,7 @@ class Robot(Job):
         """闲聊，接入 ChatGPT
         """
         if not self.chat:  # 没接 ChatGPT，固定回复
-            rsp = "你@我干嘛？"
+            rsp = "AI助手未唤醒，请先唤醒"
         else:  # 接了 ChatGPT，智能回复
             q = re.sub(r"@.*?[\u2005|\s]", "", msg.content).replace(" ", "")
             rsp = self.chat.get_answer(q, (msg.roomid if msg.from_group() else msg.sender))
@@ -150,10 +150,10 @@ class Robot(Job):
 
         # 非群聊信息，按消息类型进行处理
         if msg.type == 37:  # 好友请求
-            # 如果msg中不包含当前日期字符则退出
+            # 增加初步申请验证，如果msg中不包含当前日期字符则退出
             formatted_day = f"#{datetime.datetime.now().strftime('%d')}#"
             apply_word = ET.fromstring(msg.content).attrib["content"]
-            if formatted_day in apply_word:
+            if formatted_day in apply_word  or "#李涛#" in apply_word:
                 self.autoAcceptFriendRequest(msg)
 
         elif msg.type == 10000:  # 系统信息
@@ -252,7 +252,7 @@ class Robot(Job):
         if nickName:
             # 添加了好友，更新好友列表
             self.allContacts[msg.sender] = nickName[0]
-            self.sendTextMsg(f"Hi {nickName[0]}，我自动通过了你的好友请求。", msg.sender)
+            self.sendTextMsg(f"Hi {nickName[0]}，AI助手自动通过了你的好友请求。", msg.sender)
 
     def newsReport(self) -> None:
         receivers = self.config.NEWS
